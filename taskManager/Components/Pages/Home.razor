@@ -4,14 +4,55 @@
 <h1>Список дел</h1>
 
 <div>
-	<div class="task">
-		<input type="checkbox" />
-		<span>Тестовая задача</span>
-		<button></button>
-	</div>
+	<div class="tasks">
+            @if (tasks.Any())
+            {
+                @for(int i=0 ;i<tasks.Count; i++)
+                {
+                    var index = i;
+                    <div class="task">
+                        <input type="checkbox" @bind="tasks[index].IsCompleted" />
+                        <span style="text-decoration: @(tasks[index].IsCompleted ? "line-through" : "none")">
+                            @tasks[index].Text
+                        </span>
+                        <button @onclick="() => RemoveTask(index)"></button>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>Нет задач</p>
+            }
+        </div>
 	<div class="inputText">
-		<input type="text" />
-		<button>Добавить</button>
+		<input type="text" @bind="newTask" placeholder="Введите задачу..."/>
+		<button @onclick="AddTask">Добавить</button>
 	</div>
 </div>
 </body>
+
+@code
+{
+    private List<TaskItem> tasks = new();
+    private string newTask = "";
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTask))
+        {
+            tasks.Add(new TaskItem { Text = newTask, IsCompleted = false });
+            newTask = "";
+        }
+    }
+
+    private void RemoveTask(int index)
+    {
+        tasks.RemoveAt(index);
+    }
+
+    public class TaskItem
+    {
+        public string Text { get; set; } = "";
+        public bool IsCompleted { get; set; }
+    }
+}

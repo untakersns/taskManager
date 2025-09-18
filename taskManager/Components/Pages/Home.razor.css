@@ -23,7 +23,6 @@ body {
     background-repeat:no-repeat;
 }
 .inputText > input[type=text]{
-    transform:scale(100%,75%);
     border-width:3px;
     border-style:solid;
     border-color:black;
