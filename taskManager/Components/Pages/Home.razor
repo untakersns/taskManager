@@ -7,15 +7,14 @@
 	<div class="tasks">
             @if (tasks.Any())
             {
-                @for(int i=0 ;i<tasks.Count; i++)
+                @foreach (var task in tasks)
                 {
-                    var index = i;
                     <div class="task">
-                        <input type="checkbox" @bind="tasks[index].IsCompleted" />
-                        <span style="text-decoration: @(tasks[index].IsCompleted ? "line-through" : "none")">
-                            @tasks[index].Text
+                        <input type="checkbox" @bind="task.IsCompleted" />
+                        <span style="text-decoration: @(task.IsCompleted ? "line-through" : "none")">
+                            @task.Text
                         </span>
-                        <button @onclick="() => RemoveTask(index)"></button>
+                        <button @onclick="() => RemoveTask(task)"></button>
                     </div>
                 }
             }
@@ -45,9 +44,9 @@
         }
     }
 
-    private void RemoveTask(int index)
+    private void RemoveTask(TaskItem task)
     {
-        tasks.RemoveAt(index);
+        tasks.Remove(task);
     }
 
     public class TaskItem
