@@ -2,15 +2,21 @@
 <PageTitle>Список задач</PageTitle>
 <body>
 <h1>Список дел</h1>
-
+<div class="filter-menu">
+    <select @bind="selectedFilter" class="task-filter">
+        <option value="all">Все задачи</option>
+        <option value="notCompleted">Незавершенные</option>
+        <option value="completed">Завершенные</option>
+    </select>
+</div>
 <div>
 	<div class="tasks">
-            @if (tasks.Any())
+            @if (filteredTasks.Any())
             {
-                @foreach (var task in tasks)
+                @foreach (var task in filteredTasks)
                 {
                     <div class="task">
-                        <input type="checkbox" @bind="task.IsCompleted" />
+                        <input type="checkbox" @bind="task.IsCompleted" @oninput="StateHasChanged"/>
                         <span style="text-decoration: @(task.IsCompleted ? "line-through" : "none")">
                             @task.Text
                         </span>
@@ -34,6 +40,20 @@
 {
     private List<TaskItem> tasks = new();
     private string newTask = "";
+    private string selectedFilter = "all";
+
+    private List<TaskItem> filteredTasks
+    {
+        get
+        {
+            return selectedFilter switch
+            {
+                "active" => tasks.Where(t => !t.IsCompleted).ToList(),
+                "completed" => tasks.Where(t => t.IsCompleted).ToList(),
+                _ => tasks
+            };
+        }
+    }
 
     private void AddTask()
     {
